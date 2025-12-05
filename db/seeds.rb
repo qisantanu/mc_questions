@@ -15,26 +15,26 @@ questions_data = [
   {
     content: 'What is the capital of France?',
     option_a: 'London',
-    option_b: 'Berlin', 
+    option_b: 'Berlin',
     option_c: 'Paris',
     option_d: 'Madrid',
-    correct_options: ['C']
+    correct_options: [ 'C' ]
   },
   {
     content: 'Which of the following are programming languages?',
     option_a: 'Ruby',
     option_b: 'Python',
     option_c: 'HTML',
-    option_d: 'JavaScript', 
-    correct_options: ['A', 'B', 'D']
+    option_d: 'JavaScript',
+    correct_options: [ 'A', 'B', 'D' ]
   },
   {
     content: 'What is 2 + 2?',
     option_a: '3',
     option_b: '4',
-    option_c: '5', 
+    option_c: '5',
     option_d: '6',
-    correct_options: ['B']
+    correct_options: [ 'B' ]
   }
 ]
 

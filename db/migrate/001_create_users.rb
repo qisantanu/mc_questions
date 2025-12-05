@@ -6,7 +6,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :role, null: false, default: 'student'
       t.timestamps
     end
-    
+
     add_index :users, :email, unique: true
   end
 end

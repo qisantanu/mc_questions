@@ -7,7 +7,7 @@ class CreateStudentAnswers < ActiveRecord::Migration[8.0]
       t.boolean :correct, null: false
       t.timestamps
     end
-    
-    add_index :student_answers, [:user_id, :question_id], unique: true
+
+    add_index :student_answers, [ :user_id, :question_id ], unique: true
   end
 end
