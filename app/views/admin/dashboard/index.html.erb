@@ -1,31 +1,59 @@
 <div class="max-w-7xl mx-auto px-4">
-  <h1 class="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
   
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold text-gray-700">Total Questions</h3>
-      <p class="text-3xl font-bold text-blue-600"><%= @total_questions %></p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+      <h3 class="text-sm sm:text-lg font-semibold text-gray-700">Total Questions</h3>
+      <p class="text-2xl sm:text-3xl font-bold text-blue-600"><%= @total_questions %></p>
     </div>
-    <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold text-gray-700">Total Students</h3>
-      <p class="text-3xl font-bold text-green-600"><%= @total_students %></p>
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+      <h3 class="text-sm sm:text-lg font-semibold text-gray-700">Total Students</h3>
+      <p class="text-2xl sm:text-3xl font-bold text-green-600"><%= @total_students %></p>
     </div>
-    <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold text-gray-700">Total Answers</h3>
-      <p class="text-3xl font-bold text-purple-600"><%= StudentAnswer.count %></p>
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow sm:col-span-2 lg:col-span-1">
+      <h3 class="text-sm sm:text-lg font-semibold text-gray-700">Total Answers</h3>
+      <p class="text-2xl sm:text-3xl font-bold text-purple-600"><%= StudentAnswer.count %></p>
     </div>
   </div>
   
-  <div class="bg-white p-6 rounded-lg shadow mb-8">
+  <div class="bg-white p-4 sm:p-6 rounded-lg shadow mb-8">
     <h3 class="text-lg font-semibold text-gray-700 mb-4">Student Activity (Last 7 Days)</h3>
-    <canvas id="activityChart" width="400" height="200"></canvas>
+    <div class="h-64 sm:h-80">
+      <canvas id="activityChart" class="w-full h-full"></canvas>
+    </div>
   </div>
   
-  <div class="bg-white rounded-lg shadow">
-    <div class="px-6 py-4 border-b border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-900">Student Performance</h2>
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="px-4 sm:px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg sm:text-xl font-semibold text-gray-900">Student Performance</h2>
     </div>
-    <div class="overflow-x-auto">
+    
+    <!-- Mobile Card View -->
+    <div class="block lg:hidden p-4 space-y-4">
+      <% @students.each do |student| %>
+        <% stats = student.dashboard_stats %>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div class="font-medium text-gray-900 mb-2"><%= student.email %></div>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-500">Attempted:</span>
+              <span class="font-medium"><%= stats[:attempted] %></span>
+            </div>
+            <div>
+              <span class="text-gray-500">Correct:</span>
+              <span class="font-medium text-green-600"><%= stats[:correct] %></span>
+            </div>
+            <div class="col-span-2">
+              <span class="text-gray-500">Success Rate:</span>
+              <span class="font-medium text-blue-600"><%= stats[:success_percentage] %>%</span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Desktop Table View -->
+    <div class="hidden lg:block overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
@@ -86,6 +114,7 @@ new Chart(ctx, {
   },
   options: {
     responsive: true,
+    maintainAspectRatio: false,
     animation: {
       duration: 2000,
       easing: 'easeInOutQuart'

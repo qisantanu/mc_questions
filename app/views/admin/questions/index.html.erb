@@ -1,51 +1,81 @@
 <div class="max-w-7xl mx-auto px-4">
-  <div class="flex justify-between items-center mb-8">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
     <h1 class="text-3xl font-bold text-gray-900">Questions</h1>
-    <%= link_to "New Question", new_admin_question_path, class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" %>
+    <%= link_to "New Question", new_admin_question_path, class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full sm:w-auto text-center" %>
   </div>
   
-  <div class="bg-white rounded-lg shadow overflow-hidden">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Question</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Correct Options</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <% @questions.each do |question| %>
+  <!-- Mobile Card View -->
+  <div class="block lg:hidden space-y-4">
+    <% @questions.each do |question| %>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="mb-3">
+          <p class="text-sm font-medium text-gray-900 mb-2"><%= truncate(question.content, length: 80) %></p>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">Options: <%= question.correct_options.join(', ') %></span>
+            <span class="<%= question.can_be_edited? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %> px-2 py-1 rounded">
+              <%= question.can_be_edited? ? 'Editable' : 'Locked' %>
+            </span>
+          </div>
+          <p class="text-xs text-gray-500 mt-2"><%= question.created_at.strftime('%b %d, %Y') %></p>
+        </div>
+        <div class="flex gap-2">
+          <% if question.can_be_edited? %>
+            <%= link_to "Edit", edit_admin_question_path(question), class: "flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm text-center hover:bg-blue-700" %>
+            <%= link_to "Delete", admin_question_path(question), method: :delete, 
+                        confirm: "Are you sure?", class: "flex-1 bg-red-600 text-white py-2 px-3 rounded text-sm text-center hover:bg-red-700" %>
+          <% else %>
+            <span class="flex-1 bg-gray-300 text-gray-500 py-2 px-3 rounded text-sm text-center">Locked</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Desktop Table View -->
+  <div class="hidden lg:block bg-white rounded-lg shadow overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
           <tr>
-            <td class="px-6 py-4 text-sm text-gray-900">
-              <%= truncate(question.content, length: 100) %>
-            </td>
-            <td class="px-6 py-4 text-sm text-gray-500">
-              <%= question.correct_options.join(', ') %>
-            </td>
-            <td class="px-6 py-4 text-sm">
-              <% if question.can_be_edited? %>
-                <span class="text-green-600">Editable</span>
-              <% else %>
-                <span class="text-red-600">Locked</span>
-              <% end %>
-            </td>
-            <td class="px-6 py-4 text-sm text-gray-500">
-              <%= question.created_at.strftime('%b %d, %Y') %>
-            </td>
-            <td class="px-6 py-4 text-sm font-medium space-x-2">
-              <% if question.can_be_edited? %>
-                <%= link_to "Edit", edit_admin_question_path(question), class: "text-blue-600 hover:text-blue-900" %>
-                <%= link_to "Delete", admin_question_path(question), method: :delete, 
-                            confirm: "Are you sure?", class: "text-red-600 hover:text-red-900" %>
-              <% else %>
-                <span class="text-gray-400">Locked</span>
-              <% end %>
-            </td>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Question</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Correct Options</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @questions.each do |question| %>
+            <tr>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <%= truncate(question.content, length: 100) %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                <%= question.correct_options.join(', ') %>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <% if question.can_be_edited? %>
+                  <span class="text-green-600">Editable</span>
+                <% else %>
+                  <span class="text-red-600">Locked</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                <%= question.created_at.strftime('%b %d, %Y') %>
+              </td>
+              <td class="px-6 py-4 text-sm font-medium space-x-2">
+                <% if question.can_be_edited? %>
+                  <%= link_to "Edit", edit_admin_question_path(question), class: "text-blue-600 hover:text-blue-900" %>
+                  <%= link_to "Delete", admin_question_path(question), method: :delete, 
+                              confirm: "Are you sure?", class: "text-red-600 hover:text-red-900" %>
+                <% else %>
+                  <span class="text-gray-400">Locked</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
