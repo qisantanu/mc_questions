@@ -14,7 +14,6 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
     selected = params[:selected_options] || []
 
-    # Always create a new attempt (no uniqueness constraint)
     @student_answer = current_user.student_answers.create!(
       question: @question,
       selected_options: selected
@@ -22,8 +21,5 @@ class QuestionsController < ApplicationController
 
     @correct = @student_answer.correct
     render :result
-  rescue ActiveRecord::RecordInvalid
-    flash[:alert] = "Please select at least one option"
-    render :show
   end
 end
