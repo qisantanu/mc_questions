@@ -1,24 +1,67 @@
-# README
+# MCQ Questions Rails Application
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Rails 8 application for managing multiple choice questions with student and admin interfaces.
 
-Things you may want to cover:
+## Features
 
-* Ruby version
+### Student Features
+- Login and answer MCQ questions one by one
+- Questions appear in random order
+- Immediate feedback after each answer
+- Failed questions reappear with 30% probability
+- Dashboard showing performance statistics
 
-* System dependencies
+### Admin Features
+- Create, edit, and delete questions
+- View student performance dashboard
+- Manage multiple choice options and correct answers
 
-* Configuration
+## Setup
 
-* Database creation
+1. **Install dependencies:**
+   ```bash
+   bundle install
+   ```
 
-* Database initialization
+2. **Setup database:**
+   ```bash
+   rails db:migrate
+   rails db:seed
+   ```
 
-* How to run the test suite
+3. **Start the server:**
+   ```bash
+   rails server
+   ```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Default Users
 
-* Deployment instructions
+After running `rails db:seed`, you'll have:
 
-* ...
+- **Admin:** admin@example.com / password
+- **Student:** student@example.com / password
+
+## Usage
+
+1. **Student Interface:**
+   - Login at `/login`
+   - View dashboard at `/dashboard`
+   - Answer questions at `/question`
+
+2. **Admin Interface:**
+   - Login at `/login` with admin credentials
+   - Manage questions at `/admin/questions`
+   - View student performance at `/admin`
+
+## Database Schema
+
+- **Users:** email, password_digest, role (admin/student)
+- **Questions:** content, option_a-d, correct_options (JSON array)
+- **StudentAnswers:** user_id, question_id, selected_options (JSON), correct (boolean)
+
+## Technology Stack
+
+- Rails 8.1.1
+- SQLite3 (development)
+- Tailwind CSS (via CDN)
+- bcrypt for password hashing

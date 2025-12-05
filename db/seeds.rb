@@ -1,9 +1,47 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Create admin user
+admin = User.find_or_create_by(email: 'admin@example.com') do |user|
+  user.password = 'password'
+  user.role = 'admin'
+end
+
+# Create student user
+student = User.find_or_create_by(email: 'student@example.com') do |user|
+  user.password = 'password'
+  user.role = 'student'
+end
+
+# Create sample questions
+questions_data = [
+  {
+    content: 'What is the capital of France?',
+    option_a: 'London',
+    option_b: 'Berlin',
+    option_c: 'Paris',
+    option_d: 'Madrid',
+    correct_options: [ 'C' ]
+  },
+  {
+    content: 'Which of the following are programming languages?',
+    option_a: 'Ruby',
+    option_b: 'Python',
+    option_c: 'HTML',
+    option_d: 'JavaScript',
+    correct_options: [ 'A', 'B', 'D' ]
+  },
+  {
+    content: 'What is 2 + 2?',
+    option_a: '3',
+    option_b: '4',
+    option_c: '5',
+    option_d: '6',
+    correct_options: [ 'B' ]
+  }
+]
+
+questions_data.each do |q_data|
+  Question.find_or_create_by(content: q_data[:content]) do |question|
+    question.assign_attributes(q_data)
+  end
+end
+
+puts "Created #{User.count} users and #{Question.count} questions"

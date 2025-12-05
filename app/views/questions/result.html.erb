@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-2xl mx-auto px-4">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <div class="text-center mb-8">
+        <% if @correct %>
+          <div class="text-6xl text-green-500 mb-4">✓</div>
+          <h2 class="text-2xl font-bold text-green-600">Correct!</h2>
+        <% else %>
+          <div class="text-6xl text-red-500 mb-4">✗</div>
+          <h2 class="text-2xl font-bold text-red-600">Incorrect</h2>
+        <% end %>
+      </div>
+      
+      <div class="mb-8">
+        <p class="text-lg text-gray-800 mb-6"><%= @question.content %></p>
+        
+        <div class="space-y-3">
+          <% %w[A B C D].each_with_index do |option, index| %>
+            <% option_text = @question.send("option_#{option.downcase}") %>
+            <% if option_text.present? %>
+              <div class="p-4 border rounded-lg <%= @question.correct_options.include?(option) ? 'bg-green-100 border-green-300' : 'bg-gray-50 border-gray-200' %>">
+                <span class="font-medium"><%= option %>.</span> <%= option_text %>
+                <% if @question.correct_options.include?(option) %>
+                  <span class="text-green-600 font-semibold ml-2">✓ Correct</span>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+        
+        <p class="text-sm text-gray-600 mt-4">
+          Your answer: <%= @student_answer.selected_options.join(', ') %>
+        </p>
+      </div>
+      
+      <div class="text-center space-x-4">
+        <%= link_to "Next Question", question_path, class: "bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700" %>
+        <%= link_to "Dashboard", dashboard_path, class: "bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700" %>
+      </div>
+    </div>
+  </div>
+</div>
