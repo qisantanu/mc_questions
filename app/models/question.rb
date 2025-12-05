@@ -7,14 +7,19 @@ class Question < ApplicationRecord
   validates :correct_options, presence: true
   
   def self.next_for_student(student)
-    answered_ids = student.student_answers.pluck(:question_id)
-    failed_ids = student.student_answers.where(correct: false).pluck(:question_id)
+    # Get questions that have been answered incorrectly (failed pool)
+    failed_question_ids = student.student_answers.where(correct: false).pluck(:question_id).uniq
     
-    # 30% chance to pick from failed questions
-    if failed_ids.any? && rand < 0.3
-      where(id: failed_ids).sample
+    # Get all questions that have been attempted
+    attempted_question_ids = student.student_answers.pluck(:question_id).uniq
+    
+    # 30% chance to pick from failed questions if any exist
+    if failed_question_ids.any? && rand < 0.3
+      where(id: failed_question_ids).sample
     else
-      where.not(id: answered_ids).sample || where(id: failed_ids).sample
+      # Pick from unattempted questions first, then from failed pool
+      unattempted = where.not(id: attempted_question_ids)
+      unattempted.any? ? unattempted.sample : where(id: failed_question_ids).sample
     end
   end
   

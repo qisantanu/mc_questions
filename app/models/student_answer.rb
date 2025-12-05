@@ -3,7 +3,6 @@ class StudentAnswer < ApplicationRecord
   belongs_to :question
   
   validates :selected_options, presence: true
-  validates :user_id, uniqueness: { scope: :question_id }
   
   before_save :set_correctness
   
