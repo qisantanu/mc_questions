@@ -14,6 +14,35 @@
     <%= form.text_area :content, rows: 4, class: "mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" %>
   </div>
 
+  <div>
+    <%= form.label :image, "Question Image (optional)", class: "block text-sm font-medium text-gray-700" %>
+    <%= form.file_field :image, accept: "image/*", class: "mt-1 block w-full", id: "question_image_input" %>
+    <% if @question.image.attached? %>
+      <div class="mt-2">
+        <p class="text-sm text-gray-600">Current image:</p>
+        <%= image_tag @question.image, class: "mt-1 max-w-md rounded border" %>
+      </div>
+    <% end %>
+    <div id="image_preview" class="mt-2 hidden">
+      <p class="text-sm text-gray-600">Preview:</p>
+      <img id="preview_img" class="mt-1 max-w-md rounded border" />
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('question_image_input').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('preview_img').src = e.target.result;
+          document.getElementById('image_preview').classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
       <%= form.label :option_a, "Option A", class: "block text-sm font-medium text-gray-700" %>
@@ -39,7 +68,7 @@
       <% %w[A B C D].each do |option| %>
         <label class="flex items-center">
           <%= check_box_tag "question[correct_options][]", option, 
-                            @question.correct_options.include?(option), 
+                            (@question.correct_options || []).include?(option), 
                             class: "mr-2" %>
           <span>Option <%= option %></span>
         </label>

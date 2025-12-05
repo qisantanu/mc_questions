@@ -1,5 +1,6 @@
 class Question < ApplicationRecord
   has_many :student_answers, dependent: :destroy
+  has_one_attached :image
   
   validates :content, presence: true
   validates :option_a, :option_b, presence: true
