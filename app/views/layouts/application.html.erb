@@ -10,8 +10,8 @@
 
     <%= yield :head %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="icon" href="/icon.png" type="image/png">
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -24,7 +24,10 @@
         <div class="max-w-7xl mx-auto px-4">
           <div class="flex justify-between h-16">
             <div class="flex items-center">
-              <%= link_to "MCQ App", root_path, class: "text-xl font-bold text-gray-900" %>
+              <%= link_to root_path, class: "flex items-center space-x-3" do %>
+                <%= image_tag "logo.svg", alt: "MCQ Quiz Logo", class: "h-10 w-10" %>
+                <span class="text-xl font-bold text-gray-900">MCQ Quiz</span>
+              <% end %>
             </div>
             <div class="flex items-center space-x-4">
               <span class="text-gray-700">Welcome, <%= current_user.email %></span>
